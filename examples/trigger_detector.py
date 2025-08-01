@@ -3,7 +3,7 @@ import requests
 REST = "http://0.0.0.0:8008"
 
 print(f"{'-' * 20} Configure number of images {'-' * 20}")
-nimages = {"value": 30}
+nimages = {"value": 1000}
 r = requests.put(f"{REST}/detector/api/1.8.0/config/nimages", json=nimages)
 print(r.text)
 
@@ -29,6 +29,6 @@ r = requests.put(f"{REST}/detector/api/1.8.0/command/trigger")
 print(r)
 
 
-print(f"{'-' * 20} Disarm detector {'-' * 20}")
-r = requests.put(f"{REST}/detector/api/1.8.0/command/disarm")
-print(r)
+# print(f"{'-' * 20} Disarm detector {'-' * 20}")
+# r = requests.put(f"{REST}/detector/api/1.8.0/command/disarm")
+# print(r)

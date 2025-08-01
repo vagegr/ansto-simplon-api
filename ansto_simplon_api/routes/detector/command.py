@@ -2,12 +2,17 @@ from fastapi import APIRouter
 
 from ...simulate_zmq_stream import zmq_stream
 
-router = APIRouter(prefix="/detector/api/1.8.0/command", tags=["Detector Command"])
+# Make the commands non-blocking
+from threading import Thread
 
+router = APIRouter(prefix="/detector/api/1.8.0/command", tags=["Detector Command"])
+thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
 
 @router.put("/trigger")
 def trigger():
-    zmq_stream.stream_frames(zmq_stream.frames)
+    # zmq_stream.stream_frames(zmq_stream.frames)
+    # thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
+    thread.start()
 
 
 @router.put("/arm")
@@ -21,5 +26,8 @@ def arm():
 
 @router.put("/disarm")
 def disarm():
+    # zmq_stream.stream_end_message()
+    # thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
+    thread.run = False
     zmq_stream.stream_end_message()
     print("Disarm detector")
