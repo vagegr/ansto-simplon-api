@@ -1,6 +1,6 @@
 import requests
 
-REST = "http://0.0.0.0:8000"
+REST = "http://0.0.0.0:8008"
 
 print(f"{'-' * 20} Configure number of images {'-' * 20}")
 nimages = {"value": 30}

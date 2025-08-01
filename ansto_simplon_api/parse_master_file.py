@@ -175,7 +175,7 @@ class Parse:
             "series_unique_id": None,  # str
             "threshold_energy": {
                 "threshold_1": self.parse("threshold_energy"),
-                "threshold_2": self.parse("threshold_energy") * 3,
+                # "threshold_2": self.parse("threshold_energy") * 3,
             },
             "user_data": {"pi": float(np.pi)},
             "virtual_pixel_interpolation_enabled": bool(

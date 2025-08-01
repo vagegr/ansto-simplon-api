@@ -1,0 +1,10 @@
+#! /bin/bash
+
+# Config
+DATASET=15mrad_002_master.h5
+HOST=127.0.0.1
+PORT=8008
+
+# Commands
+export AS_HDF5_MASTER_FILE=data/$DATASET
+uvicorn ansto_simplon_api.main:app --host $HOST --port $PORT 
