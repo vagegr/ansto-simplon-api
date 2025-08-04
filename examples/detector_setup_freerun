@@ -1,0 +1,6 @@
+#! /bin/bash
+
+python detector_nimages.py 86400000
+python detector_ntrigger.py 1
+python detector_arm.py
+python detector_trigger.py

@@ -65,6 +65,7 @@ class ZmqStream:
         self.delay_between_frames = delay_between_frames
         self.number_of_data_files = number_of_data_files
         self.number_of_frames_per_trigger = None
+        self.number_of_triggers = None
 
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.PUSH)
@@ -338,6 +339,7 @@ class ZmqStream:
         logging.info(f"Sending frames to {self.address}")
         t = time.time()
         c = threading.current_thread()
+        # for _ in trange(self.number_of_triggers):
         for _ in trange(self.number_of_frames_per_trigger):
             getattr(c, "run", True)
             # print("t.run:", c.run, "..")

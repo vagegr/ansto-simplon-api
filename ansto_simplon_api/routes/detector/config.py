@@ -205,10 +205,15 @@ async def get_nimages():
     return {"value": zmq_stream.number_of_frames_per_trigger}
 
 
-# @router.put("/ntrigger")
+@router.put("/ntrigger")
+async def set_ntrigger(number_of_triggers: SimplonRequestInt):
+    zmq_stream.number_of_triggers = number_of_triggers.value
+    return {"value": zmq_stream.number_of_triggers}
+
+
 @router.get("/ntrigger")
 async def get_ntrigger():
-    return {"value": 1}
+    return {"value": zmq_stream.number_of_triggers}
 
 
 @router.get("/number_of_excluded_pixels")
