@@ -28,7 +28,6 @@ print(f"{'-' * 20} Trigger detector {'-' * 20}")
 r = requests.put(f"{REST}/detector/api/1.8.0/command/trigger")
 print(r)
 
-
 # print(f"{'-' * 20} Disarm detector {'-' * 20}")
 # r = requests.put(f"{REST}/detector/api/1.8.0/command/disarm")
 # print(r)

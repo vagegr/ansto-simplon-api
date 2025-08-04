@@ -29,7 +29,6 @@ logging.basicConfig(
 config = get_settings()
 zmq_start_message = ZMQStartMessage()
 
-
 class ZmqStream:
     """
     Class used to stream data through a ZeroMQ stream by reading a HDF5 file.
@@ -339,40 +338,44 @@ class ZmqStream:
         logging.info(f"Sending frames to {self.address}")
         t = time.time()
         c = threading.current_thread()
-        while getattr(c, "run", True):
-            for _ in trange(self.number_of_frames_per_trigger):            
-                time.sleep(self.delay_between_frames)
-                try:
-                    # Add series number
-                    compressed_image_list[self.frame_id]["series_id"] = self.sequence_id
-                    compressed_image_list[self.frame_id]["image_id"] = self.image_number
-                    compressed_image_list[self.frame_id]["series_date"] = datetime.now(
-                        tz=timezone.utc
-                    )
-                    compressed_image_list[self.frame_id]["stop_time"] = [50000000, 50000000]
-                    compressed_image_list[self.frame_id][
-                        "series_unique_id"
-                    ] = self.series_unique_id
+        for _ in trange(self.number_of_frames_per_trigger):
+            getattr(c, "run", True)
+            # print("t.run:", c.run, "..")
+            if c.run == False:
+                print("Received stop signal!")
+                break
+            time.sleep(self.delay_between_frames)
+            try:
+                # Add series number
+                compressed_image_list[self.frame_id]["series_id"] = self.sequence_id
+                compressed_image_list[self.frame_id]["image_id"] = self.image_number
+                compressed_image_list[self.frame_id]["series_date"] = datetime.now(
+                    tz=timezone.utc
+                )
+                compressed_image_list[self.frame_id]["stop_time"] = [50000000, 50000000]
+                compressed_image_list[self.frame_id][
+                    "series_unique_id"
+                ] = self.series_unique_id
 
-                    self.socket.send(cbor2.dumps(compressed_image_list[self.frame_id]))
-                    self.frame_id += 1
-                    self.image_number += 1
-                except IndexError:
-                    self.frame_id = 0
-                    compressed_image_list[self.frame_id]["series_id"] = self.sequence_id
-                    compressed_image_list[self.frame_id]["image_id"] = self.image_number
-                    compressed_image_list[self.frame_id]["series_date"] = datetime.now(
-                        tz=timezone.utc
-                    )
-                    compressed_image_list[self.frame_id]["stop_time"] = [50000000, 50000000]
-                    compressed_image_list[self.frame_id][
-                        "series_unique_id"
-                    ] = self.series_unique_id
+                self.socket.send(cbor2.dumps(compressed_image_list[self.frame_id]))
+                self.frame_id += 1
+                self.image_number += 1
+            except IndexError:
+                self.frame_id = 0
+                compressed_image_list[self.frame_id]["series_id"] = self.sequence_id
+                compressed_image_list[self.frame_id]["image_id"] = self.image_number
+                compressed_image_list[self.frame_id]["series_date"] = datetime.now(
+                    tz=timezone.utc
+                )
+                compressed_image_list[self.frame_id]["stop_time"] = [50000000, 50000000]
+                compressed_image_list[self.frame_id][
+                    "series_unique_id"
+                ] = self.series_unique_id
 
-                    self.socket.send(cbor2.dumps(compressed_image_list[self.frame_id]))
+                self.socket.send(cbor2.dumps(compressed_image_list[self.frame_id]))
 
-                    self.frame_id += 1
-                    self.image_number += 1
+                self.frame_id += 1
+                self.image_number += 1
 
         frame_rate = self.number_of_frames_per_trigger / (time.time() - t)
         logging.info(f"Frame rate: {frame_rate} frames / s")

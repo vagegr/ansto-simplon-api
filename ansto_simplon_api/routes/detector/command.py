@@ -6,13 +6,16 @@ from ...simulate_zmq_stream import zmq_stream
 from threading import Thread
 
 router = APIRouter(prefix="/detector/api/1.8.0/command", tags=["Detector Command"])
-thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
+# List of running threads
+threads_running = []
 
 @router.put("/trigger")
 def trigger():
     # zmq_stream.stream_frames(zmq_stream.frames)
-    # thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
+    thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
     thread.start()
+    # thread.join()
+    threads_running.append(thread)
 
 
 @router.put("/arm")
@@ -27,7 +30,38 @@ def arm():
 @router.put("/disarm")
 def disarm():
     # zmq_stream.stream_end_message()
-    # thread = Thread(target=zmq_stream.stream_frames, args=(zmq_stream.frames,))
-    thread.run = False
+    nthreads = len(threads_running)
+    print("\nThreads running:", nthreads, "..")
+    while len(threads_running) > 0:
+        thread = threads_running[-1]
+        thread.run = False
+        thread.join()
+        threads_running.pop()
     zmq_stream.stream_end_message()
     print("Disarm detector")
+
+@router.put("/cancel")
+def cancel():
+    nthreads = len(threads_running)
+    print("\nThreads running:", nthreads, "..")
+    while len(threads_running) > 0:
+        thread = threads_running[-1]
+        thread.run = False
+        thread.join()
+        threads_running.pop()
+    zmq_stream.stream_end_message()
+    zmq_stream.stream_end_message()
+    print("Cancel detector")
+
+@router.put("/abort")
+def abort():
+    nthreads = len(threads_running)
+    print("\nThreads running:", nthreads, "..")
+    while len(threads_running) > 0:
+        thread = threads_running[-1]
+        thread.run = False
+        thread.join()
+        threads_running.pop()
+    zmq_stream.stream_end_message()
+    zmq_stream.stream_end_message()
+    print("Abort detector")
