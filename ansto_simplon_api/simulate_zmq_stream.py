@@ -84,6 +84,7 @@ class ZmqStream:
         self.frames = None
         self.hdf5_file_path = hdf5_file_path
         self.detector_config = DetectorConfiguration()
+        self.stream_config = StreamConfiguration()
 
         self.create_list_of_compressed_frames(
             self.hdf5_file_path, self.compression, self.number_of_data_files
@@ -405,7 +406,7 @@ class ZmqStream:
         self.socket.send(message)
 
         detector_state.state = "ready"
-        if StreamConfiguration.mode == "enabled":
+        if self.stream_config.mode == "enabled":
             stream_status.state = "acquire"
         else:
             stream_status.state = "disabled"
@@ -426,7 +427,7 @@ class ZmqStream:
         self.socket.send(message)
 
         detector_state.state = "idle"
-        if StreamConfiguration.mode == "enabled":
+        if self.stream_config.mode == "enabled":
             stream_status.state = "ready"
         else:
             stream_status.state = "disabled"
