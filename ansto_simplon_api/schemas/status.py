@@ -10,3 +10,9 @@ class DetectorState(BaseModel):
 
 
 detector_state = DetectorState()
+
+class StreamStatus(BaseModel):
+    dropped: int = 0
+    state: Literal[ "disabled", "ready", "acquire", "error" ] = "ready"
+
+stream_status = StreamStatus()

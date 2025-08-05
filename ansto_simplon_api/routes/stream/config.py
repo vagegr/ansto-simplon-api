@@ -36,7 +36,7 @@ async def set_format(input: SimplonRequestStr):
 
 @router.get("/mode")
 async def get_mode():
-    return {"value": stream_config.format}
+    return {"value": stream_config.mode}
 
 
 @router.put("/mode")

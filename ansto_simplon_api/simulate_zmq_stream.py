@@ -18,7 +18,8 @@ import threading
 
 from .config import get_settings
 from .parse_master_file import Parse
-from .schemas.configuration import DetectorConfiguration, ZMQStartMessage
+from .schemas.configuration import DetectorConfiguration, ZMQStartMessage, StreamConfiguration
+from .schemas.status import detector_state, stream_status
 
 logging.basicConfig(
     level=logging.INFO,
@@ -337,6 +338,8 @@ class ZmqStream:
         None
         """
         logging.info(f"Sending frames to {self.address}")
+        detector_state.state = "acquire"
+
         t = time.time()
         c = threading.current_thread()
         # for _ in trange(self.number_of_triggers):
@@ -401,6 +404,12 @@ class ZmqStream:
         message = cbor2.dumps(zmq_start_message.model_dump())
         self.socket.send(message)
 
+        detector_state.state = "ready"
+        if StreamConfiguration.mode == "enabled":
+            stream_status.state = "acquire"
+        else:
+            stream_status.state = "disabled"
+
     def stream_end_message(self) -> None:
         """
         Send end message through a ZeroMQ Stream
@@ -415,6 +424,12 @@ class ZmqStream:
         self.end_message["series_unique_id"] = self.series_unique_id
         message = cbor2.dumps(self.end_message)
         self.socket.send(message)
+
+        detector_state.state = "idle"
+        if StreamConfiguration.mode == "enabled":
+            stream_status.state = "ready"
+        else:
+            stream_status.state = "disabled"
 
     def start_stream(self) -> None:
         """

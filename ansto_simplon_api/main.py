@@ -11,6 +11,7 @@ from .routes.detector.command import router as command
 from .routes.detector.config import router as detector_config
 from .routes.status.status import router as status
 from .routes.stream.config import router as stream_config
+from .routes.stream.status import router as stream_status
 
 config = get_settings()
 
@@ -44,6 +45,7 @@ async def favicon():
 
 app.include_router(command)
 app.include_router(stream_config)
+app.include_router(stream_status)
 app.include_router(detector_config)
 app.include_router(status)
 app.include_router(ansto_endpoints)
