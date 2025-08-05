@@ -451,6 +451,32 @@ class ZmqStream:
         self.stream_frames(self.frames)
         self.stream_end_message()
 
+    def cancel_stream(self) -> None:
+        """
+        Stops the data acquisition, but only after the next image is finished.
+
+        Returns
+        -------
+        None
+        """
+        self.socket.close(linger=1)
+        self.socket = self.context.socket(zmq.PUSH)
+        self.socket.bind(self.address)
+        self.stream_end_message()
+
+    def abort_stream(self) -> None:
+        """
+        Aborts all operations and resets the system immediately. All data in 
+        the pipeline will be dropped.
+
+        Returns
+        -------
+        None
+        """
+        self.socket.close(linger=0)
+        self.socket = self.context.socket(zmq.PUSH)
+        self.socket.bind(self.address)
+        self.stream_end_message()
 
 zmq_stream = ZmqStream(
     address=config.ZMQ_ADDRESS,

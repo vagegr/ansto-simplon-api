@@ -50,7 +50,7 @@ def cancel():
         thread.run = False
         thread.join()
         threads_running.pop()
-    zmq_stream.stream_end_message()
+    zmq_stream.cancel_stream()
     print("Cancel detector")
 
 @router.put("/abort")
@@ -62,5 +62,5 @@ def abort():
         thread.run = False
         thread.join()
         threads_running.pop()
-    zmq_stream.stream_end_message()
+    zmq_stream.abort_stream()
     print("Abort detector")
