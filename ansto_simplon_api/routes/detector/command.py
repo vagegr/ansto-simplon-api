@@ -23,6 +23,7 @@ def arm():
     zmq_stream.sequence_id += 1
     # Reset the image number every time we arm the detector
     zmq_stream.image_number = 0
+    zmq_stream.trigger_number = 0
     zmq_stream.stream_start_message()
     return {"sequence id": zmq_stream.sequence_id}
 
@@ -50,7 +51,6 @@ def cancel():
         thread.join()
         threads_running.pop()
     zmq_stream.stream_end_message()
-    zmq_stream.stream_end_message()
     print("Cancel detector")
 
 @router.put("/abort")
@@ -62,6 +62,5 @@ def abort():
         thread.run = False
         thread.join()
         threads_running.pop()
-    zmq_stream.stream_end_message()
     zmq_stream.stream_end_message()
     print("Abort detector")

@@ -78,6 +78,7 @@ class ZmqStream:
         self.frame_id = 0
 
         self.image_number = 0  # used to mimic the dectris image number
+        self.trigger_number = 0 # keep track of number of trigger to autodisarm
 
         self.user_data = ""  # an empty string is the real default value
         self.series_unique_id = None
@@ -385,6 +386,11 @@ class ZmqStream:
 
         frame_rate = self.number_of_frames_per_trigger / (time.time() - t)
         logging.info(f"Frame rate: {frame_rate} frames / s")
+
+        self.trigger_number += 1
+        if self.trigger_number == self.number_of_triggers:
+            self.stream_end_message()
+
 
     def stream_start_message(self) -> None:
         """
