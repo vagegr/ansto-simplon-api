@@ -84,6 +84,8 @@ async def get_count_time():
 @router.put("/count_time")
 async def put_count_time(input: SimplonRequestFloat):
     zmq_start_message.count_time = input.value
+    zmq_stream.detector_config.detector_count_time = input.value
+    zmq_stream.detector_config.detector_frame_time = input.value + zmq_stream.detector_config.detector_readout_time
     return {"value": zmq_start_message.count_time}
 
 
@@ -184,6 +186,9 @@ async def get_frame_time():
 @router.put("/frame_time")
 async def put_frame_time(input: SimplonRequestFloat):
     zmq_start_message.frame_time = input.value
+    zmq_stream.detector_config.detector_frame_time = input.value
+    if zmq_stream.detector_config.detector_count_time + zmq_stream.detector_config.detector_readout_time > zmq_stream.detector_config.detector_frame_time:
+        zmq_stream.detector_config.detector_count_time = zmq_stream.detector_config.detector_frame_time - zmq_stream.detector_config.detector_readout_time
     return {"value": zmq_start_message.frame_time}
 
 

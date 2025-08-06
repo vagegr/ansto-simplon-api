@@ -75,7 +75,9 @@ class ZMQStartMessage(BaseModel):
 class DetectorConfiguration(BaseModel):
     """Any entry that is not sent via ZMQ goes here"""
 
+    detector_count_time: float = 0.01
     detector_readout_time: float = 0.0000001
+    detector_frame_time: float = detector_count_time + detector_readout_time
     detector_bit_depth_image: int = 32
     detector_bit_depth_readout: int = 16
     detector_compression: str = "bslz4"

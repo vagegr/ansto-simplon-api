@@ -24,6 +24,7 @@ def arm():
     # Reset the image number every time we arm the detector
     zmq_stream.image_number = 0
     zmq_stream.trigger_number = 0
+    zmq_stream.frame_id = 0;
     zmq_stream.stream_start_message()
     return {"sequence id": zmq_stream.sequence_id}
 

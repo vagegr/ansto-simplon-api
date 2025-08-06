@@ -351,7 +351,8 @@ class ZmqStream:
             if c.run == False:
                 print("Received stop signal!")
                 break
-            time.sleep(self.delay_between_frames)
+            # time.sleep(self.delay_between_frames)
+            time.sleep(self.detector_config.detector_frame_time)
             try:
                 # Add series number
                 compressed_image_list[self.frame_id]["series_id"] = self.sequence_id
