@@ -460,10 +460,10 @@ class ZmqStream:
         -------
         None
         """
+        # self.stream_end_message()
         self.socket.close(linger=1)
         self.socket = self.context.socket(zmq.PUSH)
         self.socket.bind(self.address)
-        self.stream_end_message()
 
     def abort_stream(self) -> None:
         """
@@ -474,10 +474,10 @@ class ZmqStream:
         -------
         None
         """
+        # self.stream_end_message()
         self.socket.close(linger=0)
         self.socket = self.context.socket(zmq.PUSH)
         self.socket.bind(self.address)
-        self.stream_end_message()
 
 zmq_stream = ZmqStream(
     address=config.ZMQ_ADDRESS,

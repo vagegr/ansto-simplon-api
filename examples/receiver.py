@@ -51,7 +51,8 @@ context = zmq.Context()
 
 #  Socket to talk to server
 socket = context.socket(zmq.PULL)
-endpoint = "tcp://0.0.0.0:5555"
+# endpoint = "tcp://0.0.0.0:5555"
+endpoint = "tcp://192.168.3.1:31001"
 
 count = 0
 
